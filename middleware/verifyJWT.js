@@ -2,13 +2,9 @@ const jwt = require('jsonwebtoken')
 
 const verifyJWT = (req, res, next) => {
     const managerHeader = req.headers.authorization || req.headers.Authorization
-
-    if (!managerHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Unauthorized' })
-    }
-
+    if (!managerHeader?.startsWith('Bearer '))
+        return res.status(401).json({ message: 'Unauthorized' });
     const token = managerHeader.split(' ')[1]
-
     jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET,
@@ -16,7 +12,5 @@ const verifyJWT = (req, res, next) => {
             if (err) return res.status(403).json({ message: 'Forbidden' })
             req.user = decoded
             next()
-        }
-    )
-}
+        })}
 module.exports = verifyJWT 

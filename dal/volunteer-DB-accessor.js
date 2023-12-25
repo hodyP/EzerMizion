@@ -69,8 +69,7 @@ class VolunteerDataAccessor
         if (!first_name||!last_name||!phone||!mail||
             !cityId||!neighborhood||!street||!
             identity_number||!date_of_birth) {
-                return {status:400,result:{message:'All fields are required'}};
-            
+                return {status:400,result:{message:'All fields are required'}};           
         }
         const volunteer = await Volunteer.create({
             first_name,last_name,phone,mail,

@@ -11,12 +11,14 @@ console.log(process.env.NODE_ENV)
 
 //middleware
 app.use(cors(corsOptions))
+app.use(cors());
 app.use(bodyParser.urlencoded())
+app.use("/", express.static(path.join(__dirname, "public")));
 app.use(express.json())
 app.use(cookieParser())
 
 //routes
-app.use('/', express.static(path.join(__dirname, 'public')))
+
 app.use('/', require('./routes/root'))
 app.use("/api/volunteer", require("./routes/volunteerRoutes"));
 app.use("/api/volunteer_timer", require("./routes/volunteer_timerRoutes"));
