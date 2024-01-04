@@ -1,14 +1,15 @@
 const volunteer_detailsData = require("../dal/volunteer_details-DB-accessor");
 class Volunteer_detailsController{
-
+//יוצר אחד בלבד
     createVolunteer_details=async(req,res)=>{
         const volunteer_details=await volunteer_detailsData.createVolunteer_details(req.body);
         return res.status(volunteer_details.status).json(volunteer_details.result);
     }
-    
+  
     getAllVolunteer_detailsByVolunteerId=async(req,res)=>{
-        const volunteerId=req.params.volunteerId;
-        await volunteer_detailsData.getAllVolunteer_detailsById(volunteerId);
+        const volunteerId=req.params.id;
+        const volunteer_details=await volunteer_detailsData.getAllVolunteer_detailsById(volunteerId);
+        return res.status(volunteer_details.status).json(volunteer_details.result);
     }
 
     updateVolunteer_details=async(req,res)=>{

@@ -1,23 +1,35 @@
 const db = require('../models/index')
 const Needy = db.needy
 const City=db.city
+const NeedyRequest=db.needy_requests
+
 class NeedyDataAccessor
 {
     getAllNeedys= async()=>{
         const needys = await Needy.findAll({
             include : 
             [
-                { model: City, as: 'city&needy', attributes:['name']}               
+                { model: City, as: 'cityAndneedy', attributes:['name']},
+                { model: NeedyRequest, as: 'needy_requestsAndneedy'}             
             ]               
         })  
         if (!needys?.length) {           
             return {status:400,result:{message:'No needys found'}};
-        }        
-        return {status:201,result:needys}
+        }  
+        const needysfix = needys.map((needy) => ({
+            ...needy.dataValues,
+            city: needy.cityAndneedy.name,
+          }));     
+        return {status:201,result:needysfix}
     }
 
     getOneNeedy=async(id)=>{
-        const needy = await Needy.findOne({where:{id:id}})
+        const needy = await Needy.findOne({
+            include : 
+            [
+                { model: City, as: 'cityAndneedy', attributes:['name']}           
+            ]  ,
+            where:{id:id}})
         if(needy)
             return {status:201,result:{needy}};
         return {status:400,result:{message:'No needy found'}};    
@@ -30,7 +42,7 @@ class NeedyDataAccessor
  
         if (!first_name||!last_name||!phone||
             !cityId||!neighborhood||!street||!
-            remaind_time||!last_time_updated) {
+            remaind_time) {
                 return {status:400,result:{message:'All fields are required'}};
             
         }
@@ -45,9 +57,9 @@ class NeedyDataAccessor
         }
     } 
 
-    updateNeedy=async(values) =>{
+    updateNeedy=async(req) =>{
         const {first_name,last_name,phone,phone_2,mail,cityId,neighborhood,street,
-            remaind_time,description,last_time_updated} =values;
+            remaind_time,description,last_time_updated} =req.body;
 
         if (!first_name||!last_name||!phone||
             !cityId||!neighborhood||!street||!
@@ -67,7 +79,7 @@ class NeedyDataAccessor
     } 
     
     getNeedyForFollowUp= async()=>{
-        const date=new Date().toLocaleDateString()
+        const date=new Date().toLocaleDateString();
         const needys = await Needy.findAll({where:{last_time_updated}}) //////לתקן 
         if (!needys?.length) {           
             return {status:400,result:{message:'No needys found'}};

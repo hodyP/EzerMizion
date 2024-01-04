@@ -52,7 +52,7 @@ const { sequelize, DataTypes } = require("./sequelize");
             ,
         last_time_updated:{
           type: DataTypes.DATEONLY,
-          defaultValue:new Date().toLocaleDateString(),
+          defaultValue:new Date().toISOString().split('T')[0],
           allowNull: false
         }
       },

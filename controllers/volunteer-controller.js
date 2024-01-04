@@ -20,7 +20,8 @@ class VolunteerColntroller{
     }
 
     updateVolunteer=async(req,res)=>{
-        const volunteer= await volunteerData.updateVolunteer(req.body);
+        const volunteer= await volunteerData.updateVolunteer(req);
+        console.log(volunteer);
         return res.status(volunteer.status).json(volunteer.result);
     }      
 }

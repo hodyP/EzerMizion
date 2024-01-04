@@ -16,7 +16,7 @@ class NeedyColntroller{
         return res.status(needy.status).json(needy.result);
     }
     updateNeedy=async(req,res)=>{
-        const needy= await needyData.updateNeedy(req.body);
+        const needy= await needyData.updateNeedy(req);
         return res.status(needy.status).json(needy.result);
     } 
     

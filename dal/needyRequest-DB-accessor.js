@@ -1,16 +1,21 @@
 const db = require('../models/index')
 const NeedyRequest = db.needy_requests
 const Volunteer_timer = db.volunteer_timer
+const TypeOfVolunteer=db.type_of_volunteer;
+const PartInDay=db.partInDay;
+const Volunteer=db.volunteer;
+const Needy =db.needy;
+const { Op } = require('sequelize');
 
 class NeedyRequestDataAccessor
 {    
     createNeedyRequest=async(values)=>{
-        const {day,type_of_valunteerId,part_in_dayId,needyId}=values;
-        if (!day||!type_of_valunteerId||!part_in_dayId||!needyId) {          
+        const {day,type_of_volunteerId,part_in_dayId,needyId}=values;
+        if (!day||!type_of_volunteerId||!part_in_dayId||!needyId) {          
             return {status:400,result:{message: 'some field is required'}};
         }
         const needy_request = await NeedyRequest.create({
-            day,type_of_valunteerId,part_in_dayId,needyId});
+            day,type_of_volunteerId,part_in_dayId,needyId});
         if (needy_request) 
         {
             return {status:201,result:needy_request};
@@ -21,13 +26,13 @@ class NeedyRequestDataAccessor
     } 
 
     updateNeedyRequest=async(values) =>{
-        const {day,type_of_valunteerId,part_in_dayId,volunteerId,needyId,start_date,end_date,is_approved} =values;
+        const {day,type_of_volunteerId,part_in_dayId,volunteerId,needyId,start_date,end_date,is_approved} =values;
 
-        if (!day||!type_of_valunteerId||!part_in_dayId||!needyId||!start_date) {
+        if (!day||!type_of_volunteerId||!part_in_dayId||!needyId||!start_date) {
             return {status:400,result:{message:'All fields are required'}};
         }
         const needy_request = await NeedyRequest.update({
-            day,type_of_valunteerId,part_in_dayId,volunteerId,needyId,start_date,
+            day,type_of_volunteerId,part_in_dayId,volunteerId,needyId,start_date,
             end_date,is_approved},{where:{id:values.id}});
             console.log(needy_request);
         if (needy_request) {
@@ -49,12 +54,19 @@ class NeedyRequestDataAccessor
         if (!id) {
             return res.status(400).json({ message: 'NeedyRequest ID required' })
         }
-        await NeedyRequest.destroy({where: {id: id}});
+        await NeedyRequest.destroy({where: {id: id,is_approved:false}});
             return {status:201,result:{message:`values  with ID ${id} deleted`}}
     }
     AllneedyRequestByNeedy=async(needyId)=>{
 
-    const needyRequests = await NeedyRequest.findAll({where:{needyId:needyId,end_date:null}})
+    const needyRequests = await NeedyRequest.findAll({
+        include : 
+        [
+            { model: TypeOfVolunteer, as: 'needy_requestsAndtype_of_volunteer', attributes:['name']},
+            { model: PartInDay, as: 'needy_requestsAndpart_in_dayId', attributes:['name_time']},
+            { model: Volunteer, as: 'needy_requestsAndvolunteer', attributes:['first_name','last_name']}
+        ],
+        where:{needyId:needyId,end_date:null}})
 
     if (!needyRequests?.length) {
         return {status:400,result:{message:'No needyRequests found'}}
@@ -64,7 +76,14 @@ class NeedyRequestDataAccessor
 
     AllneedyRequestByVolunteer=async(volunteerId)=>{
 
-        const needyRequests = await NeedyRequest.findAll({where:{volunteerId:volunteerId,end_date:null}})   
+        const needyRequests = await NeedyRequest.findAll({
+            include : 
+            [
+                { model: TypeOfVolunteer, as: 'needy_requestsAndtype_of_volunteer', attributes:['name']},
+                { model: PartInDay, as: 'needy_requestsAndpart_in_dayId', attributes:['name_time']},
+                { model: Needy, as: 'needy_requestsAndneedy', attributes:['last_name']}
+            ],    
+            where:{volunteerId:volunteerId,end_date:null}})   
         if (!needyRequests?.length) {
             return {status:400,result:{message:'No needyRequests found'}}
         }
@@ -73,7 +92,7 @@ class NeedyRequestDataAccessor
 
     AllRequestMachedAndNotApproved=async()=>{
 
-        const needyRequests = await NeedyRequest.findAll({where:{is_approved:false,volunteerId:{[Op.not]: null}}})
+        const needyRequests = await NeedyRequest.findAll({where:{is_approved:false,volunteerId:{ [Op.not]: null }}})
     
         if (!needyRequests?.length) {
             return {status:400,result:{message:'No needyRequests found'}}

@@ -25,12 +25,12 @@ class NeedyRequestController{
         return res.status(400).json({message:'you must not delede matched needyRequeest'});
     }
     getAllNeedyRequestForNeedyId=async(req,res)=>{
-        const needyId=req.body.needyId;
+        const needyId=req.params.id;
         const needyRequest=await needyRequestData.AllneedyRequestByNeedy(needyId);
             return res.status(needyRequest.status).json(needyRequest.result);
         }
     getAllNeedyRequestForVolunteerId=async(req,res)=>{
-        const volunteerId=req.body.volunteerId;    
+        const volunteerId=req.params.id;    
         const needyRequest=await needyRequestData.AllneedyRequestByVolunteer(volunteerId);
             return res.status(needyRequest.status).json(needyRequest.result);
         } 

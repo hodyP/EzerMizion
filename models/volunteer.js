@@ -15,15 +15,15 @@ const { sequelize, DataTypes } = require("./sequelize");
           },
         last_name: {
             type: DataTypes.STRING(45),
-            allowNull: true
+            allowNull: false
         },
         phone: {
             type: DataTypes.STRING(45),
-            allowNull: true
+            allowNull: false
             },
         mail: {
             type: DataTypes.STRING(45),
-            allowNull: false
+            allowNull: true
             },
         cityId: {
             type: DataTypes.INTEGER,
@@ -31,7 +31,7 @@ const { sequelize, DataTypes } = require("./sequelize");
             },
         neighborhood: {
             type: DataTypes.STRING(45),
-            allowNull: true
+            allowNull: false
             },
         street: {
             type: DataTypes.STRING(45),

@@ -5,17 +5,17 @@ const Volunteer_details = db.volunteer_details
 class Volunteer_detailsDataAccessor
 {  
     createVolunteer_details=async(values)=>{
-        const {volunteerId,type_of_valunteerId}=values;
+        const {volunteerId,type_of_volunteerId}=values;
         
-        console.log(volunteerId,type_of_valunteerId);
+        console.log(volunteerId,type_of_volunteerId);
 
-        if (!volunteerId||!type_of_valunteerId) {
+        if (!volunteerId||!type_of_volunteerId) {
             return res.status(400).json({ message: 'some field is required' })
         }
         const volunteer_details = await Volunteer_details.create({
-            volunteerId,type_of_valunteerId});
+            volunteerId,type_of_volunteerId});
         if (volunteer_details) {
-            return res.status(201).json({volunteer_details})
+            return {status:201,result:volunteer_details}
         } 
         else {
             return res.status(400).json({ message:'Invalid volunteer_details data received' });
@@ -52,11 +52,11 @@ class Volunteer_detailsDataAccessor
     } 
 
     getAllVolunteer_detailsById=async(volunteerId) =>{
-        const citys = await city.findAll({where:{volunteerId:volunteerId}})  
-        if (!citys?.length) {           
+        const volunteer_details = await Volunteer_details.findAll({where:{volunteerId:volunteerId}})  
+        if (!volunteer_details?.length) {           
             return {status:400,result:{message:'No Volunteer_details found'}};
         }        
-        return {status:201,result:citys}
+        return {status:201,result:volunteer_details}
     }
 }
 const volunteer_detailsDataAccessor=new Volunteer_detailsDataAccessor();

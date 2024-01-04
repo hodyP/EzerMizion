@@ -13,7 +13,7 @@ const { sequelize, DataTypes } = require("./sequelize");
             type: DataTypes.STRING(45),
             allowNull: false
           },
-        type_of_valunteerId: {
+        type_of_volunteerId: {
           type: DataTypes.INTEGER,
           allowNull: false
         },

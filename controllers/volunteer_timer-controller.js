@@ -8,10 +8,15 @@ class Volunteer_timerController{
     }
 
     getAllVolunteer_timerByVolunteerId=async(req,res)=>{
-        const volunteerId=req.params.volunteerId;
-        await volunteer_timerData.getAllVolunteer_timerById(volunteerId);
+        const volunteerId=req.params.id;
+        const volunteer_timer=await volunteer_timerData.getAllVolunteer_timerById(volunteerId);
+        return res.status(volunteer_timer.status).json(volunteer_timer.result);
     }
-
+    updateVolunteer_timer_is_match=async(req,res)=>{
+        const id=req.params.id;
+        const volunteer_timer=await volunteer_timerData.updateVolunteer_timer_is_match(id);
+        return res.status(volunteer_timer.status).json(volunteer_timer.result);
+    }
     updateVolunteer_timer=async(req,res)=>{
         const values=req.body;
         const id=req.params.id;

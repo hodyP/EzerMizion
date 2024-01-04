@@ -6,10 +6,10 @@ volunteer_detailsRouter.route("/")
     .post(volunteer_detailsController.createVolunteer_details)
    
 volunteer_detailsRouter.route("/:id")  
-    .put(volunteer_detailsController.updatevolunteer_details)
-    .delete(volunteer_detailsController.deletevolunteer_details)
+   /// .put(volunteer_detailsController.updateVolunteer_details)
+    .delete(volunteer_detailsController.deleteVolunteer_details)
     
-volunteer_detailsRouter.route("/:volunteerId")
-    .get(volunteer_detailsController.getAllvolunteer_detailsByVolunteerId)
-    
+volunteer_detailsRouter.route("/volunteer/:id")
+    .get(volunteer_detailsController. getAllVolunteer_detailsByVolunteerId)
+    //.put(volunteer_detailsController. updateVolunteer_details)
 module.exports=volunteer_detailsRouter;

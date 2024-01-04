@@ -8,7 +8,7 @@ const { sequelize, DataTypes } = require("./sequelize");
           allowNull: false,
           autoIncrement: true
         },
-        name_time: {
+        name: {
             type: DataTypes.STRING(45),
             allowNull: false
           },

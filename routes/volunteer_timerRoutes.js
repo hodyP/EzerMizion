@@ -8,8 +8,8 @@ volunteer_timerRouter.route("/")
 volunteer_timerRouter.route("/:id")  
     .put(volunteer_timerController.updateVolunteer_timer)
     .delete(volunteer_timerController.deleteVolunteer_timer)
-    
-volunteer_timerRouter.route("/:volunteerId")
+    //.patch(volunteer_timerController.updateVolunteer_timer_is_match)
+volunteer_timerRouter.route("/volunteer/:id")
     .get(volunteer_timerController.getAllVolunteer_timerByVolunteerId)
 
 module.exports=volunteer_timerRouter;

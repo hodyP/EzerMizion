@@ -1,7 +1,7 @@
 const db = require('../models/index')
 const partInDay = db.partInDay
 
-class partInDayDataAccessor
+class PartInDayDataAccessor
 {
     getAllPartInDay= async()=>{
         const partInDays = await partInDay.findAll({})  
@@ -11,5 +11,5 @@ class partInDayDataAccessor
         return {status:201,result:partInDays}
     }
 }
-const partInDayDataAccessor=new partInDayDataAccessor();
+const partInDayDataAccessor=new PartInDayDataAccessor();
 module.exports=partInDayDataAccessor;

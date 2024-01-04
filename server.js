@@ -19,13 +19,16 @@ app.use(cookieParser())
 
 //routes
 
-app.use('/', require('./routes/root'))
+app.use('/', require('./routes/root'));
 app.use("/api/volunteer", require("./routes/volunteerRoutes"));
 app.use("/api/volunteer_timer", require("./routes/volunteer_timerRoutes"));
 app.use("/api/needy", require("./routes/needyRoutes"));
+app.use("/api/part_in_day",require("./routes/partInDayRouters"));
 app.use("/api/needy_request", require("./routes/needy_requestRoutes"));
-app.use('/api/manager',require("./routes/managerRouters"))
-
+app.use('/api/manager',require("./routes/managerRouters"));
+app.use('/api/type_of_volunteer',require("./routes/type_of_volunteer"));
+app.use("/api/city",require("./routes/cityRouters"));
+app.use("/api/volunteer_details",require("./routes/volunteer_detailsRoutes"));
 //to do: convert to middleware
 app.all('*', (req, res) => {
     res.status(404)

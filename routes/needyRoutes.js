@@ -12,5 +12,5 @@ needyRouter.route("/:id")
  
 needyRouter.route("/follow_up")
     .get(needyController.getNeedyForFollowUp)
-    
+
 module.exports=needyRouter;

@@ -4,5 +4,6 @@ const type_of_volunteerRouter = express.Router();
 
 type_of_volunteerRouter.route("/")
     .get(type_of_volunteerController.getAllType_of_volunteer)
+    .post(type_of_volunteerController.createType_of_volunteer)
     
 module.exports=type_of_volunteerRouter;
