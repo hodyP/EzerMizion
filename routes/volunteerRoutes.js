@@ -9,8 +9,7 @@ volunteerRouter.route("/")
 volunteerRouter.route("/:id")
     .get(volunteerController.getOneVolunteer)
     .patch(volunteerController.updateVolunteer)
-
-// volunteerRouter.route("/:type/:day/:parInDay/:city")
-//     .get(volunteerController.getVolunteerByCondition)
-    
+volunteerRouter.route("/unactive/:id")
+    .put(volunteerController.updateVolunteerToUnActive)
+      
 module.exports=volunteerRouter;

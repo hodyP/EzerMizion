@@ -112,7 +112,71 @@ class VolunteerDataAccessor
             console.log(err);
         }
     } 
-
+    getVolunteersByCondition=async(id,city,neighborhood,type,day,partInDay)=>{
+        try{
+            const cityInstance = await City.findOne({ where: { name: city } });
+            const cityId = cityInstance ? cityInstance.id : null;
+    
+            if (!cityId) {
+                return { status: 400, result: { message: 'City not found' } };
+            }
+            const whereConditions = {
+                is_active: true,
+                cityId: cityId
+            };
+    
+            if (neighborhood) {
+                whereConditions.neighborhood = neighborhood;
+            }
+            const volunteers = await Volunteer.findAll({
+                include : 
+                [
+                    { model: City, as: 'cityAndvolunteer', attributes:['name']},
+                    {model:VolunteerDetails,as:'volunteer_detailsAndvolunteer',
+                    include: [{ model: TypeOfVolunteer, as: 'volunteer_detailsAndtype_of_volunteer', attributes: ['name'] }] },
+                    { model: VolunteerTimer, as: 'volunteer_timerAndvolunteer', attributes:['day','partInDayId','is_matched']},     
+                    { model: NeedyRequest, as: 'needy_requestsAndvolunteer'}
+                ],                 
+                where:whereConditions
+        })  
+            if (!volunteers?.length) {           
+                return {status:400,result:{message:'No volunteers found'}};
+            }   
+            const transformedVolunteers = volunteers.map((volunteer) => ({
+                id: volunteer.id,
+                first_name: volunteer.first_name,
+                last_name: volunteer.last_name,
+                phone: volunteer.phone,
+                mail: volunteer.mail,
+                cityId: volunteer.cityId,
+                neighborhood: volunteer.neighborhood,
+                street: volunteer.street,
+                identity_number: volunteer.identity_number,
+                is_active: volunteer.is_active,
+                date_of_birth: volunteer.date_of_birth,
+                city: volunteer.cityAndvolunteer.name,
+                volunteer_details: volunteer.volunteer_detailsAndvolunteer
+                    ? volunteer.volunteer_detailsAndvolunteer.map((details) => ({
+                        type_of_volunteer: details.type_of_volunteer?.name || null,
+                        }))
+                    : [], 
+                volunteer_timer: volunteer.volunteer_timerAndvolunteer.map((timer) => ({
+                  day: timer.day,
+                  partInDayId: timer.partInDayId,
+                  is_matched: timer.is_matched,
+                  needyrequest: volunteer.needy_requestsAndvolunteer.find((request) =>
+                    request.volunteerId === volunteer.id &&
+                    request.day === timer.day &&
+                    request.part_in_dayId === timer.partInDayId
+                  )
+                }))
+              }));
+            return {status:201,result:transformedVolunteers}}
+            catch(err)
+            {
+                console.log(err);
+            }
+    }
     createVolunteer=async(values)=>{
         try{
             const {first_name,last_name,phone,mail,cityId,neighborhood,street,
@@ -130,10 +194,7 @@ class VolunteerDataAccessor
                 cityId,neighborhood,street,
                 identity_number,date_of_birth});
                 if (volunteer) {
-                    // Extract the ID from the created volunteer
-                    const volunteerId = volunteer.id;
-        
-                    // Return the ID along with the volunteer object
+                    const volunteerId = volunteer.id;       
                     return { status: 201, result: { ...volunteer.toJSON(), id: volunteerId } };
                 } else {
                     return { status: 400, result: { message: 'Invalid volunteer data received' } };
@@ -172,11 +233,11 @@ class VolunteerDataAccessor
     }
     updateVolunteerToUnActive=async(req) =>{
         try{
-            const {id} =req.params.id;
+            const id =req.params.id;
 
             if (!id) {
                 return {status:400,result:{message:'id is required'}};
-            }
+            }           
             const volunteer = await Volunteer.update({
                 is_active:false},{where:{id:req.params.id}});
                 console.log(volunteer);

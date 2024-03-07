@@ -23,7 +23,29 @@ class VolunteerColntroller{
         const volunteer= await volunteerData.updateVolunteer(req);
         console.log(volunteer);
         return res.status(volunteer.status).json(volunteer.result);
-    }      
+    } 
+    updateVolunteerToUnActive=async(req,res)=>{
+        //יש ליישם אם יש בקשות שאין להם enddate אין לעדכן כלא פעילה.
+        const volunteer =await volunteerData.updateVolunteerToUnActive(req);
+        return res.status(volunteer.status).json(volunteer.result);
+    }   
+    getVolunteersByCondition=async(req,res)=>{
+        const id = req.params.id;
+        const city = req.params.city;
+        const neighborhood = req.params.neighborhood; 
+        const type = req.params.type;
+        const day = req.params.day;
+        const partInDay = req.params.partInDay;
+        try{
+              const volunteers=await volunteerData.getVolunteersByCondition(id,city,neighborhood,type,day,partInDay);
+        return res.status(volunteers.status).json(volunteers.result); 
+
+        }catch(ex)
+        {
+            console.log(ex);
+            return res.status(500).json(ex);
+        }
+          }  
 }
 
 const volunteer=new VolunteerColntroller();
