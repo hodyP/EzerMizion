@@ -42,7 +42,7 @@ const { sequelize, DataTypes } = require("./sequelize");
             allowNull: false
             },
         remaind_time: {
-            type: DataTypes.STRING(45),
+            type: DataTypes.INTEGER,
             allowNull: false
             },
         description: {

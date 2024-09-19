@@ -6,6 +6,11 @@ class NeedyColntroller{
         return res.status(needys.status).json(needys.result); 
     }
 
+    deleteNeedy=async(req,res)=>{
+        const needys=await needyData.deleteNeedy(req.body.arr);
+        return res.status(needys.status).json(needys.result); 
+    }
+
     getOneNeedy=async(req,res)=>{
         const needy=await needyData.getOneNeedy(req.params.id);
         return res.status(needy.status).json(needy.result);    
@@ -19,10 +24,24 @@ class NeedyColntroller{
         const needy= await needyData.updateNeedy(req);
         return res.status(needy.status).json(needy.result);
     } 
+    updateForFollowUp=async(req,res)=>{
+        const needy= await needyData.updateForFollowUp(req.body.id);
+        return res.status(needy.status).json(needy.result);
+    } 
     
     getNeedyForFollowUp=async(req,res)=>{
-        const needy= await needyData.getNeedyForFollowUp(req.body);
-        return res.status(needy.status).json(needy.result);
+        try {
+            
+            const needy= await needyData.getNeedyForFollowUp();
+            // if (!needy?.length) {           
+            //     return res.status(200).json(null);
+            // }  
+            return res.status(200).json(needy);
+
+          } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+          }
     } 
 }
 

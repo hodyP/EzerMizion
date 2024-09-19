@@ -42,16 +42,17 @@ class NeedyRequestDataAccessor {
             return { status: 400, result: { message: 'Invalid needy_request data received' } };
         }
     }
-    updateNeedyRequestForShibuz=async (values) => {
-        try{
-        const {  volunteerId, start_date,is_approved } = values;
 
-        if (!volunteerId) {
+    updateNeedyRequestForShibuz=async (values,Id) => {
+        try{
+        const updateData = values;
+        const id=Id;
+        if (!updateData) {
             return { status: 400, result: { message: 'All fields are required' } };
         }
-        const needy_request = await NeedyRequest.update({
-            volunteerId, start_date,is_approved 
-        }, { where: { id: values.id} });
+        const needy_request = await NeedyRequest.update(updateData
+       , { where: { id:id} });
+
         console.log(needy_request);
         if (needy_request) {
             return { status: 201, result: needy_request };
@@ -59,11 +60,29 @@ class NeedyRequestDataAccessor {
             return { status: 400, result: { message: 'Invalid needy_request data received'  } };
           }
         } catch (error) {
-          console.error('Error updating needy_request:', error);
+          console.log('Error updating needy_request:', error);
           return { status: 500, result: { message: 'Internal server error'  } };
           
         }
     }
+    cancelShibuz=async (Id) => {
+        try{
+        const id=Id;
+        const needy_request = await NeedyRequest.update({ volunteerId: null }
+       , { where: { id:id} });
+
+        console.log(needy_request);
+        if (needy_request) {
+            return { status: 201, result: needy_request };
+          } else {
+            return { status: 400, result: { message: 'Invalid needy_request data received'  } };
+          }
+        } catch (error) {
+          console.log('Error updating needy_request:', error);
+          return { status: 500, result: { message: 'Internal server error'  } };  
+        }
+    }
+
     getNeedy_requetById = async (id) => {
         const needyRequest = await NeedyRequest.findOne({ where: { id: id } })
         if (needyRequest)
@@ -146,7 +165,26 @@ class NeedyRequestDataAccessor {
     }
     AllRequestMachedAndNotApproved = async () => {
 
-        const needyRequests = await NeedyRequest.findAll({ where: { is_approved: false, volunteerId: { [Op.not]: null } } })
+        const needyRequests = await NeedyRequest.findAll(
+            { where: { is_approved: false, volunteerId: { [Op.not]: null } } ,
+            include: [
+                {
+                    model: Volunteer,as: 'needy_requestsAndvolunteer',
+                    attributes: ['id', 'first_name', 'last_name','phone']
+                },
+                {
+                    model: Needy,as: 'needy_requestsAndneedy',
+                    attributes: ['id', 'first_name', 'last_name',  'phone'] 
+                },
+                {
+                    model: TypeOfVolunteer ,as: 'needy_requestsAndtype_of_volunteer',
+                    attributes: ['id', 'name'] 
+                },
+                {
+                    model: PartInDay,as: 'needy_requestsAndpart_in_dayId',
+                    attributes: ['id', 'name_time'] 
+                }
+            ]})
 
         if (!needyRequests?.length) {
             return { status: 400, result: { message: 'No needyRequests found' } }

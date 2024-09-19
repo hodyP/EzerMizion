@@ -5,6 +5,7 @@ const volunteerRouter = express.Router();
 volunteerRouter.route("/")
     .get(volunteerController.getAllVolunteers)
     .post(volunteerController.createVolunteer)
+    .delete(volunteerController.deleteVolunteer)
    
 volunteerRouter.route("/:id")
     .get(volunteerController.getOneVolunteer)

@@ -1,11 +1,18 @@
-const { Sequelize } = require('sequelize');
+const {Op, Sequelize } = require('sequelize');
 const {sequelize}=require('./sequelize')
 const { applyExtraSetup } = require('./Extra-Setup');
 
 const db = {}
 
-db.Sequelize = Sequelize
-db.sequelize = sequelize
+// const sequelize = new Sequelize('ezer_mizion', 'root', '4321', {
+//   host: 'localhost',
+//   dialect: 'mysql', 
+//   logging: false, 
+// });
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+db.op=Op;
 
 db.city = require('./city')
 db.needy_requests = require('./needy_requests')

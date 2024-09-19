@@ -14,6 +14,12 @@ class VolunteerColntroller{
         return res.status(volunteer.status).json(volunteer.result);    
     }
 
+    deleteVolunteer=async(req,res)=>{
+        const arr=req.body.arr;
+        const volunteer=await volunteerData.deleteVolunteer(arr);
+        return res.status(volunteer.status).json(volunteer.result);    
+    }
+
     createVolunteer=async(req,res)=>{     
         const volunteer=await volunteerData.createVolunteer(req.body);
         return res.status(volunteer.status).json(volunteer.result);

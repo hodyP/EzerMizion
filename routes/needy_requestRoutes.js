@@ -5,8 +5,11 @@ const needy_requetRouter=express.Router();
 needy_requetRouter.route('/')
     .post(needy_requetController.createneedyRequest)
     .get(needy_requetController.getAllRequestMachedAndNotApproved)
+    
 needy_requetRouter.route('/:id/shibuz')
+    .post(needy_requetController.cancelShibuz)
     .put(needy_requetController.updateNeedyRequestForShibuz)
+    // .delete(לחמוק שדות שקשורים לשיבוץ)
 
 needy_requetRouter.route('/:id')
     .get(needy_requetController.getNeedy_requetById)

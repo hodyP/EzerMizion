@@ -12,7 +12,11 @@ class NeedyRequestController{
     }
     updateNeedyRequestForShibuz=async(req,res)=>{
         
-        const needyRequest=await needyRequestData.updateNeedyRequestForShibuz(req.body);
+        const needyRequest=await needyRequestData.updateNeedyRequestForShibuz(req.body,req.params.id);
+        return res.status(needyRequest.status).json(needyRequest.result);
+    }
+    cancelShibuz=async(req,res)=>{
+        const needyRequest=await needyRequestData.cancelShibuz(req.params.id);
         return res.status(needyRequest.status).json(needyRequest.result);
     }
     getNeedy_requetById=async(req,res)=>{ 

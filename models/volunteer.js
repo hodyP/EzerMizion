@@ -37,10 +37,7 @@ const { sequelize, DataTypes } = require("./sequelize");
             type: DataTypes.STRING(45),
             allowNull: true
             },
-        identity_number: {
-            type: DataTypes.STRING(45),
-            allowNull: true
-            },   
+          
         is_active: {
             type: DataTypes.BOOLEAN,     
             defaultValue:true,
