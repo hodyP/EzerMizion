@@ -5,6 +5,7 @@ const VolunteerTimer=db.volunteer_timer
 const VolunteerDetails=db.volunteer_details
 const NeedyRequest=db.needy_requests
 const TypeOfVolunteer=db.type_of_volunteer;
+
 const { Op } = require('sequelize'); 
 
 
@@ -268,16 +269,47 @@ class VolunteerDataAccessor
           return { status: 201, result: { message: 'המערך ריק, אין מזהים למחיקה.' } };
         } 
         try {
-            await NeedyRequest.update({volunteerId:null,start_date:null,is_approved:false},
-                {where: {
+            // await NeedyRequest.update({volunteerId:null,start_date:null,is_approved:false},
+            //     {where: {
+            //       volunteerId: {
+            //         [Op.in]: arr, 
+            //       },
+            //     },
+            
+            //   });
+
+              //////////////////
+              const currentDate = new Date(); 
+              for (let i = 0; i < arr.length; i++) {
+                const id = arr[i];
+                const needyRequest = await NeedyRequest.update({volunteerId:null},{ where: { volunteerId: id } });
+          
+                if (!needyRequest) {
+                  console.log(`מתנדב עם ID ${id} לא נמצא בטבלת פרטי מתנדב`);
+                  continue;   }
+          
+
+                  const updateResult = await Volunteer.update(
+                    { is_active: false  , end_date: currentDate }, // השדה לעדכון
+                    { where: { id: id } } // תנאי ה- WHERE
+                  );
+                 
+              
+                  volunteerIds.splice(i, 1); 
+                  i--; 
+              }
+                ///////////////////////
+
+            await VolunteerDetails.destroy({
+                where: {
                   volunteerId: {
                     [Op.in]: arr, 
                   },
                 },
-            
+                
               });
 
-            await VolunteerDetails.destroy({
+              await VolunteerTimer.destroy({
                 where: {
                   volunteerId: {
                     [Op.in]: arr, 

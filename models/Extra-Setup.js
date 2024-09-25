@@ -30,7 +30,7 @@ const applyExtraSetup = () => {
   volunteer_timer.belongsTo(volunteer, { foreignKey: "volunteerId", as: "volunteer_timerAndvolunteer" });
   volunteer.hasMany(volunteer_timer, { foreignKey: "volunteerId", as: "volunteer_timerAndvolunteer" });
 
-  volunteer_timer.belongsTo(partInDay, { foreignKey: "partInDayId", as: " volunteer_timerAndpartInDay" });
-  partInDay.hasMany(volunteer_timer, { foreignKey: "partInDayId", as: " volunteer_timerAndpartInDay" });
+  volunteer_timer.belongsTo(partInDay, { foreignKey: "partInDayId", as: "volunteer_timerAndpartInDay" });
+  partInDay.hasMany(volunteer_timer, { foreignKey: "partInDayId", as: "volunteer_timerAndpartInDay" });
 };
 module.exports = { applyExtraSetup };

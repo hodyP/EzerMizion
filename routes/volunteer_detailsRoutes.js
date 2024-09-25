@@ -11,5 +11,5 @@ volunteer_detailsRouter.route("/:id")
     
 volunteer_detailsRouter.route("/volunteer/:id")
     .get(volunteer_detailsController. getAllVolunteer_detailsByVolunteerId)
-    //.put(volunteer_detailsController. updateVolunteer_details)
+    .put(volunteer_detailsController. updateVolunteer_details)
 module.exports=volunteer_detailsRouter;

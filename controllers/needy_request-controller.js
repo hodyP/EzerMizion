@@ -7,7 +7,7 @@ class NeedyRequestController{
     }
     updateNeedyRequest=async(req,res)=>{
         
-        const needyRequest=await needyRequestData.updateNeedyRequest(req.body);
+        const needyRequest=await needyRequestData.updateNeedyRequest(req.params.id, req.body);
         return res.status(needyRequest.status).json(needyRequest.result);
     }
     updateNeedyRequestForShibuz=async(req,res)=>{

@@ -23,20 +23,35 @@ class Volunteer_detailsDataAccessor
     } 
 
     updateVolunteer_details=async(id,values) =>{
-        const {volunteerId,day,partInDayId} = values;
-
-        if (!volunteerId||!day||!partInDayId) {
-            return {status:400,result:{ message:'some field is required'}};
-        }
-        const volunteer_details = await Volunteer_details.update({
-            volunteerId,day,partInDayId},{where:{id:id}});
-            console.log(volunteer_details);
-        if (volunteer_details) {
-            return {status:201,result:{ volunteer_details}};
-        } 
-        else {
-            return {status:400,result:{ message:'Invalid Volunteer_details data received'}};
-        }
+        const {arr} = values;
+        console.log(Array.isArray(arr)+
+        " oooooooooooooooooooooooooooooooooooooooooooooo"+arr+" ooooooo "+id)
+        try {
+            
+            await Volunteer_details.destroy({
+                where: {
+                    volunteerId: id
+                }
+            });
+            const newRecords = arr.map(type => {
+                return {
+                    volunteerId: id,
+                    type_of_volunteerId: type
+                };
+            });
+    
+            const volunteer_details = await Volunteer_details.bulkCreate(newRecords);
+            if (volunteer_details) {
+                return {status:201,result:{ volunteer_details}};
+            } 
+            else {
+                return {status:400,result:{ message:'Invalid Volunteer_details data received'}};
+            }
+            
+        } catch (error) {
+            console.log('Error updating volunteer details:', error);
+            return {status:400,result:{ message:'something worse heppened'}};
+        }     
     } 
 
     deleteVolunteer_details=async(id) =>{

@@ -24,16 +24,16 @@ class NeedyRequestDataAccessor {
         }
     }
 
-    updateNeedyRequest = async (values) => {
+    updateNeedyRequest = async (id,values) => {
         const { day, type_of_volunteerId, part_in_dayId, volunteerId, needyId, start_date, end_date, is_approved } = values;
 
-        if (!day || !type_of_volunteerId || !part_in_dayId || !needyId || !start_date) {
+        if (!day || !type_of_volunteerId || !part_in_dayId  ) {
             return { status: 400, result: { message: 'All fields are required' } };
         }
         const needy_request = await NeedyRequest.update({
             day, type_of_volunteerId, part_in_dayId, volunteerId, needyId, start_date,
             end_date, is_approved
-        }, { where: { id: values.id} });
+        }, { where: { id: id} });
         console.log(needy_request);
         if (needy_request) {
             return { status: 201, result: needy_request };
@@ -44,6 +44,7 @@ class NeedyRequestDataAccessor {
     }
 
     updateNeedyRequestForShibuz=async (values,Id) => {
+       
         try{
         const updateData = values;
         const id=Id;
@@ -229,7 +230,7 @@ class NeedyRequestDataAccessor {
         }
         const needy_request = await NeedyRequest.update({         
             end_date:new Date()
-            // .toISOString().split('T')[0]
+            
         }, { where: { id: id } });
         console.log(needy_request);
         if (needy_request) {

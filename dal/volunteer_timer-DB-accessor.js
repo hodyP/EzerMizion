@@ -1,5 +1,6 @@
 const db = require('../models/index')
 const Volunteer_timer = db.volunteer_timer
+const PartInDay = db.partInDay;
 
 
 class volunteer_timerDataAccessor
@@ -72,7 +73,12 @@ class volunteer_timerDataAccessor
     } 
 
     getAllVolunteer_timerById=async(volunteerId) =>{
-        const volunteer_timer = await Volunteer_timer.findAll({where:{volunteerId:volunteerId}})  
+        const volunteer_timer = await Volunteer_timer.findAll({
+            include:
+            [
+                { model: PartInDay, as: 'volunteer_timerAndpartInDay', attributes: ['name_time'] }
+            ],
+            where:{volunteerId:volunteerId}})  
         if (!volunteer_timer?.length) {           
             return {status:400,result:{message:'No Volunteer_timer found'}};
         }        
