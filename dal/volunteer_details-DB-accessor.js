@@ -24,8 +24,6 @@ class Volunteer_detailsDataAccessor
 
     updateVolunteer_details=async(id,values) =>{
         const {arr} = values;
-        console.log(Array.isArray(arr)+
-        " oooooooooooooooooooooooooooooooooooooooooooooo"+arr+" ooooooo "+id)
         try {
             
             await Volunteer_details.destroy({
